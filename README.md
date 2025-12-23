@@ -1,21 +1,35 @@
 # AI Emergency Assistant 🚨
 
 An AI-powered emergency response assistant that provides
-immediate, clear actions during critical situations.
+immediate, clear actions during critical situations with minimal user input.
 
-## Features
-- Panic-first UI
-- Emergency type & symptom selection
-- AI-driven decision flow (coming next)
-- Built with React + Vite + Tailwind CSS
+## 🔥 Why this matters
+In emergencies, panic costs time. This system prioritizes
+speed, clarity, and AI-driven guidance.
 
-## Tech Stack
-- React (Vite)
+## ✨ Features
+- Panic-first UX (1-tap emergency flow)
+- Emergency type & symptom capture
+- Anonymous user sessions (no signup friction)
+- Emergency data stored securely in Firestore
+- AI decision engine (coming next)
+
+## 🧠 Tech Stack
+- React + Vite
 - Tailwind CSS
 - React Router
-- Firebase (Phase 2)
+- Firebase Authentication (Anonymous)
+- Cloud Firestore
 - Gemini API (Phase 3)
 
-## Status
-✅ Phase 1 complete  
-🚧 Phase 2: Firebase integration in progress
+## 📊 Current Status
+✅ Phase 0: Architecture & planning  
+✅ Phase 1: UI, routing, responsive layout  
+✅ Phase 2: Firebase Auth + Firestore integration  
+🚧 Phase 3: Gemini AI decision intelligence
+
+## 🚀 Roadmap
+- AI-generated emergency instructions
+- Confidence-based response scoring
+- Emergency severity classification
+- Multi-language support
