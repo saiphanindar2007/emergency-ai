@@ -1,7 +1,13 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { saveEmergency } from "../firebase";
+import { auth } from "../firebase";
+
 
 export default function Emergency() {
   const navigate = useNavigate();
+  const [type, setType] = useState("");
+  const [symptom, setSymptom] = useState("");
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center px-4">
@@ -19,11 +25,16 @@ export default function Emergency() {
         <label className="block mb-2 font-medium">
           Emergency Type
         </label>
-        <select className="w-full p-3 border rounded-lg">
-          <option>Accident</option>
-          <option>Medical</option>
-          <option>Fire</option>
-          <option>Other</option>
+        <select
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+          className="w-full p-3 border rounded-lg"
+        >
+          <option value="">Select type</option>
+          <option value="Accident">Accident</option>
+          <option value="Medical">Medical</option>
+          <option value="Fire">Fire</option>
+          <option value="Other">Other</option>
         </select>
       </div>
 
@@ -32,17 +43,33 @@ export default function Emergency() {
         <label className="block mb-2 font-medium">
           Symptoms (select one)
         </label>
-        <select className="w-full p-3 border rounded-lg">
-          <option>Bleeding</option>
-          <option>Unconscious</option>
-          <option>Breathing Difficulty</option>
-          <option>Severe Pain</option>
+        <select
+          value={symptom}
+          onChange={(e) => setSymptom(e.target.value)}
+          className="w-full p-3 border rounded-lg"
+        >
+          <option value="">Select symptom</option>
+          <option value="Bleeding">Bleeding</option>
+          <option value="Unconscious">Unconscious</option>
+          <option value="Breathing Difficulty">Breathing Difficulty</option>
+          <option value="Severe Pain">Severe Pain</option>
         </select>
       </div>
 
       {/* Continue Button */}
       <button
-        onClick={() => navigate("/decision")}
+        onClick={async () => {
+          if (!type || !symptom) {
+            alert("Please select emergency details");
+            return;
+          }
+          await saveEmergency({
+            uid: auth.currentUser.uid,
+            type,
+            symptom,
+          });
+          navigate("/decision");
+        }}
         className="px-8 py-4 bg-red-600 text-white text-lg rounded-lg hover:bg-red-700"
       >
         GET AI DECISION
