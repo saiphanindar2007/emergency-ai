@@ -27,7 +27,10 @@ export default function Emergency() {
         </label>
         <select
           value={type}
-          onChange={(e) => setType(e.target.value)}
+          onChange={(e) => {
+            setType(e.target.value);
+            setSymptom("");
+          }}
           className="w-full p-3 border rounded-lg"
         >
           <option value="">Select type</option>
@@ -43,37 +46,75 @@ export default function Emergency() {
         <label className="block mb-2 font-medium">
           Symptoms (select one)
         </label>
+
         <select
           value={symptom}
           onChange={(e) => setSymptom(e.target.value)}
           className="w-full p-3 border rounded-lg"
         >
-          <option value="">Select symptom</option>
-          <option value="Bleeding">Bleeding</option>
-          <option value="Unconscious">Unconscious</option>
-          <option value="Breathing Difficulty">Breathing Difficulty</option>
-          <option value="Severe Pain">Severe Pain</option>
+        <option value="">Select symptom</option>
+
+        {type === "Accident" && (
+          <>
+            <option value="Unconscious">Unconscious</option>
+            <option value="Heavy Bleeding">Heavy Bleeding</option>
+            <option value="Fracture">Fracture</option>
+            <option value="Minor Injury">Minor Injury</option>
+          </>
+        )}
+
+        {type === "Medical" && (
+          <>
+            <option value="Breathing Difficulty">
+              Breathing Difficulty
+            </option>
+            <option value="Chest Pain">Chest Pain</option>
+          </>
+        )}
+
+        {type === "Fire" && (
+          <>
+            <option value="Burns">Burns</option>
+            <option value="Smoke Inhalation">
+              Smoke Inhalation
+            </option>
+          </>
+        )}
+
+        {type === "Other" && (
+          <>
+            <option value="Person Collapsed">Person Collapsed</option>
+            <option value="Severe Distress">Severe Distress</option>
+            <option value="Unknown Emergency">Unknown Emergency</option>
+          </>
+        )}
+
         </select>
       </div>
 
-      {/* Continue Button */}
-      <button
-        onClick={async () => {
-          if (!type || !symptom) {
-            alert("Please select emergency details");
-            return;
-          }
-          await saveEmergency({
-            uid: auth.currentUser.uid,
+    {/* Continue Button */}
+    <button
+      onClick={async () => {
+        if (!type || !symptom) {
+          alert("Please select emergency details");
+          return;
+        }
+        await saveEmergency({
+        uid: auth.currentUser.uid,
+        type,
+        symptom,
+        });
+        navigate("/decision", {
+          state: {
             type,
             symptom,
-          });
-          navigate("/decision");
-        }}
-        className="px-8 py-4 bg-red-600 text-white text-lg rounded-lg hover:bg-red-700"
-      >
-        GET AI DECISION
-      </button>
+          },
+        });
+      }}
+      className="px-8 py-4 bg-red-600 text-white text-lg rounded-lg hover:bg-red-700"
+    >
+      GET AI DECISION
+    </button>
     </div>
   );
 }
