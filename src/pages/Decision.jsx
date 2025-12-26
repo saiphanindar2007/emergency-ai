@@ -10,6 +10,33 @@ const severityStyles = {
   UNKNOWN: "bg-gray-100 text-gray-700 border-gray-400",
 };
 
+const severityUI = {
+  CRITICAL: {
+    pageBg: "bg-red-50",
+    border: "border-red-500",
+    title: "text-red-700",
+    pulse: "animate-pulse",
+  },
+  HIGH: {
+    pageBg: "bg-orange-50",
+    border: "border-orange-400",
+    title: "text-orange-700",
+    pulse: "",
+  },
+  LOW: {
+    pageBg: "bg-green-50",
+    border: "border-green-400",
+    title: "text-green-700",
+    pulse: "",
+  },
+  UNKNOWN: {
+    pageBg: "bg-gray-100",
+    border: "border-gray-300",
+    title: "text-gray-700",
+    pulse: "",
+  },
+};
+
 export default function Decision() {
   const location = useLocation();
   const { type, symptom } = location.state || {};
@@ -30,9 +57,31 @@ export default function Decision() {
   }, [type, symptom]);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-      <div className="bg-white shadow-xl rounded-xl p-6 max-w-xl w-full">
-        <h1 className="text-3xl font-bold text-red-600 mb-4 text-center">
+    <div
+      className={`min-h-screen ${
+        response
+          ? severityUI[response.severity]?.pageBg
+          : "bg-gray-100"
+      } flex items-center justify-center px-4`}
+    >
+      <div
+        className={`bg-white shadow-xl rounded-xl p-6 max-w-xl w-full border-2 ${
+          response
+            ? severityUI[response.severity]?.border
+            : "border-gray-300"
+        }`}
+      >
+        <h1
+          className={`text-3xl font-bold mb-4 text-center ${
+            response
+              ? severityUI[response.severity]?.title
+              : "text-gray-700"
+          } ${
+              response?.severity === "CRITICAL"
+                ? severityUI.CRITICAL.pulse
+                : ""
+            }`}
+        >
           AI Emergency Guidance
         </h1>
 
@@ -61,6 +110,12 @@ export default function Decision() {
             >
               Severity: {response.severity}
             </div>
+
+            <p className="text-center text-sm font-semibold uppercase tracking-wide mt-2">
+              {response.severity === "CRITICAL" && "Immediate action required"}
+              {response.severity === "HIGH" && "Urgent attention needed"}
+              {response.severity === "LOW" && "Guided assistance"}
+            </p>
 
             {/* AI Confidence */}
             <div className="mb-4 text-center">
