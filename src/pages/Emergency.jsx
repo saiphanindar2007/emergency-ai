@@ -58,6 +58,7 @@ export default function Emergency() {
           <>
             <option value="Unconscious">Unconscious</option>
             <option value="Heavy Bleeding">Heavy Bleeding</option>
+            <option value="Fall">Fall</option>
             <option value="Fracture">Fracture</option>
             <option value="Minor Injury">Minor Injury</option>
           </>
@@ -65,19 +66,18 @@ export default function Emergency() {
 
         {type === "Medical" && (
           <>
-            <option value="Breathing Difficulty">
-              Breathing Difficulty
-            </option>
+            <option value="Breathing Difficulty">Breathing Difficulty</option>
+            <option value="Severe Pain">Severe Pain</option>
             <option value="Chest Pain">Chest Pain</option>
+            <option value="Panic Attack">Panic Attack</option>
+            <option value="Seizure">Seizure</option>
           </>
         )}
 
         {type === "Fire" && (
           <>
             <option value="Burns">Burns</option>
-            <option value="Smoke Inhalation">
-              Smoke Inhalation
-            </option>
+            <option value="Smoke Inhalation">Smoke Inhalation</option>
           </>
         )}
 

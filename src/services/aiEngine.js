@@ -1,103 +1,139 @@
 export function getEmergencyGuidance(type, symptom) {
-  // ======================
-  // 🚑 ACCIDENT CASES
-  // ======================
+  // DEFAULT RESPONSE
+  const base = {
+    severity: "UNKNOWN",
+    confidence: 0.6,
+    actions: [
+      "Call emergency services immediately.",
+      "Stay calm and ensure safety.",
+    ],
+    doNot: [],
+    reasoning: "Insufficient information. Emergency response recommended.",
+    callNow: true,
+  };
 
+  // ACCIDENT CASES
   if (type === "Accident" && symptom === "Unconscious") {
     return {
       severity: "CRITICAL",
-      confidence: 0.96,
+      confidence: 0.95,
       actions: [
-        "Call emergency services immediately (112)",
-        "Check breathing and pulse",
-        "Place the person on their side",
-        "Loosen tight clothing",
-        "Monitor until help arrives",
+        "Call emergency services (108) immediately.",
+        "Check if the person is breathing.",
+        "Place the person on their side.",
+        "Loosen tight clothing.",
+        "Stay with the person until help arrives.",
       ],
       doNot: [
-        "Do NOT give food or water",
-        "Do NOT shake the person",
+        "Do NOT give food or water.",
+        "Do NOT shake the person.",
       ],
-      reasoning:
-        "Loss of consciousness after an accident may indicate head injury or internal trauma.",
+      reasoning: "Unconsciousness after an accident is life-threatening.",
+      callNow: true,
     };
   }
 
   if (type === "Accident" && symptom === "Heavy Bleeding") {
     return {
-      severity: "CRITICAL",
-      confidence: 0.95,
+      severity: "HIGH",
+      confidence: 0.9,
       actions: [
-        "Apply firm pressure to the wound",
-        "Use clean cloth or bandage",
-        "Elevate the injured area if possible",
-        "Call emergency services immediately",
+        "Apply firm pressure to stop bleeding.",
+        "Use a clean cloth or bandage.",
+        "Keep the injured area elevated.",
+        "Call emergency services if bleeding continues.",
       ],
       doNot: [
-        "Do NOT remove deeply embedded objects",
-        "Do NOT wash deep wounds aggressively",
+        "Do NOT remove deeply embedded objects.",
       ],
-      reasoning:
-        "Severe bleeding can lead to rapid blood loss and shock.",
+      reasoning: "Heavy bleeding can cause shock if untreated.",
+      callNow: true,
+    };
+  }
+
+  if (type === "Accident" && symptom === "Fall") {
+    return {
+      severity: "HIGH",
+      confidence: 0.9,
+      actions: [
+        "Keep the person still.",
+        "Check for visible injuries.",
+        "Apply gentle pressure if bleeding."
+      ],
+      doNot: [
+        "Do NOT move the person unnecessarily.",
+        "Do NOT massage injured areas."
+      ],
+      reasoning: "Falls may cause internal injuries that are not immediately visible.",
+      callNow: true,
     };
   }
 
   if (type === "Accident" && symptom === "Fracture") {
     return {
       severity: "HIGH",
-      confidence: 0.9,
+      confidence: 0.88,
       actions: [
-        "Immobilize the injured area",
-        "Apply a cold compress",
-        "Avoid unnecessary movement",
-        "Seek medical attention immediately",
+        "Immobilize the injured area.",
+        "Apply cold pack if swelling is present.",
+        "Seek medical help immediately."
       ],
       doNot: [
-        "Do NOT try to realign the bone",
-        "Do NOT allow the person to walk",
+        "Do NOT try to realign the bone.",
       ],
-      reasoning:
-        "Improper handling of fractures can worsen injury and cause complications.",
+      reasoning: "Fractures require professional medical treatment.",
+      callNow: true,
     };
   }
 
   if (type === "Accident" && symptom === "Minor Injury") {
     return {
       severity: "LOW",
-      confidence: 0.75,
+      confidence: 0.8,
       actions: [
-        "Clean the wound gently",
-        "Apply antiseptic",
-        "Cover with a clean bandage",
-        "Monitor for infection",
+        "Clean the wound with clean water.",
+        "Apply a clean bandage.",
+        "Monitor for swelling or pain."
       ],
-      doNot: [
-        "Do NOT ignore worsening pain or swelling",
-      ],
-      reasoning:
-        "Minor injuries usually heal with basic first aid if monitored properly.",
+      doNot: [],
+      reasoning: "Minor injuries usually do not require emergency care.",
+      callNow: false,
     };
   }
 
-  // ======================
-  // 🏥 MEDICAL CASES
-  // ======================
-
+  // MEDICAL CASES
   if (type === "Medical" && symptom === "Breathing Difficulty") {
     return {
       severity: "HIGH",
-      confidence: 0.92,
+      confidence: 0.95,
       actions: [
-        "Help the person sit upright",
-        "Loosen tight clothing",
-        "Encourage slow breathing",
-        "Call emergency services if condition worsens",
+        "Help the person sit upright.",
+        "Loosen tight clothing.",
+        "Encourage slow breathing.",
+        "Call emergency services immediately.",
       ],
       doNot: [
-        "Do NOT make the person lie flat",
+        "Do NOT lay the person flat.",
       ],
-      reasoning:
-        "Breathing difficulty may indicate asthma, allergy, or cardiac issues.",
+      reasoning: "Breathing difficulty indicates respiratory distress.",
+      callNow: true,
+    };
+  }
+
+  if (type === "Medical" && symptom === "Severe Pain") {
+    return {
+      severity: "HIGH",
+      confidence: 0.85,
+      actions: [
+        "Help the person rest comfortably.",
+        "Monitor symptoms closely.",
+        "Call emergency services if pain worsens.",
+      ],
+      doNot: [
+        "Do NOT give unknown medications.",
+      ],
+      reasoning: "Severe pain may indicate internal injury.",
+      callNow: false,
     };
   }
 
@@ -106,93 +142,88 @@ export function getEmergencyGuidance(type, symptom) {
       severity: "CRITICAL",
       confidence: 0.97,
       actions: [
-        "Call emergency services immediately",
-        "Help the person sit and stay calm",
-        "Loosen tight clothing",
+        "Help the person sit or lie down comfortably.",
+        "Loosen tight clothing.",
+        "Keep the person calm and still."
       ],
       doNot: [
-        "Do NOT give food or drink",
-        "Do NOT leave the person alone",
+        "Do NOT let the person walk.",
+        "Do NOT give food or drink."
       ],
-      reasoning:
-        "Chest pain can be a sign of heart attack and requires urgent care.",
+      reasoning: "Chest pain may indicate a heart-related emergency.",
+      callNow: true,
     };
   }
 
-  // ======================
-  // 🔥 FIRE CASES
-  // ======================
-
-  if (type === "Fire" && symptom === "Burns") {
+  if (type === "Medical" && symptom === "Panic Attack") {
     return {
-      severity: "HIGH",
+      severity: "LOW",
       confidence: 0.9,
       actions: [
-        "Move away from the fire source",
-        "Cool the burn with running water",
-        "Cover with a clean cloth",
-        "Seek medical attention",
+        "Encourage slow, deep breathing.",
+        "Move to a quiet and safe place.",
+        "Stay with the person and reassure them."
       ],
       doNot: [
-        "Do NOT apply ice directly",
-        "Do NOT burst blisters",
+        "Do NOT shout or panic.",
+        "Do NOT crowd the person."
       ],
-      reasoning:
-        "Burn injuries can worsen without immediate cooling and care.",
+      reasoning: "Panic attacks are distressing but usually not life-threatening.",
+      callNow: false,
     };
   }
 
-  if (type === "Fire" && symptom === "Smoke Inhalation") {
+  if (type === "Medical" && symptom === "Seizure") {
+    return {
+      severity: "HIGH",
+      confidence: 0.93,
+      actions: [
+        "Clear nearby objects to prevent injury.",
+        "Place the person on their side after the seizure stops.",
+        "Time the seizure if possible."
+      ],
+      doNot: [
+        "Do NOT restrain movements.",
+        "Do NOT put anything in the mouth."
+      ],
+      reasoning: "Seizures require medical evaluation, especially if prolonged.",
+      callNow: true,
+    };
+  }
+
+  // FIRE
+  if (type === "Fire" && (symptom === "Burns" || symptom === "Smoke Inhalation")){
     return {
       severity: "CRITICAL",
-      confidence: 0.94,
+      confidence: 0.98,
       actions: [
-        "Move to fresh air immediately",
-        "Call emergency services",
-        "Monitor breathing closely",
+        "Move away from fire immediately.",
+        "Avoid inhaling smoke.",
+        "Call emergency services (108).",
       ],
       doNot: [
-        "Do NOT re-enter the fire area",
+        "Do NOT use elevators.",
       ],
-      reasoning:
-        "Smoke inhalation can cause airway damage and oxygen deprivation.",
+      reasoning: "Fire emergencies are immediately life-threatening.",
+      callNow: true,
     };
   }
 
+  // OTHER
   if (type === "Other") {
     return {
-      severity: "CRITICAL",
-      confidence: 0.85,
+      severity: "UNKNOWN",
+      confidence: 0.7,
       actions: [
-        "Call emergency services immediately (112)",
-        "Ensure your own safety first",
-        "Stay with the person if safe",
-        "Follow instructions from emergency responders",
+        "Assess the situation carefully.",
+        "Ensure your own safety.",
+        "Call emergency services if unsure.",
       ],
-      doNot: [
-        "Do NOT leave the person alone",
-        "Do NOT attempt risky interventions",
-      ],
-      reasoning:
-        "When the emergency type is unclear, immediate escalation ensures the fastest professional response.",
+      doNot: [],
+      reasoning: "Uncategorized emergency. Human judgment required.",
+      callNow: true,
     };
   }
 
-
-  // ======================
-  // ❓ FALLBACK
-  // ======================
-
-  return {
-    severity: "UNKNOWN",
-    confidence: 0.6,
-    actions: [
-      "Ensure scene safety",
-      "Call emergency services immediately",
-      "Follow instructions from professionals",
-    ],
-    doNot: [],
-    reasoning:
-      "Insufficient information provided. Escalation is the safest approach.",
-  };
+  return base;
 }

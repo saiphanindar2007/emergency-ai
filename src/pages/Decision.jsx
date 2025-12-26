@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getEmergencyGuidance } from "../services/aiEngine";
+import CalmAnimation from "../components/CalmAnimation";
 
 const severityStyles = {
   CRITICAL: "bg-red-100 text-red-700 border-red-400",
@@ -40,63 +41,83 @@ export default function Decision() {
             Analyzing situation and deciding next steps...
           </p>
         ) : response ? (
-        <>
-        <div
-          className={`mb-4 px-4 py-2 border rounded-lg text-center font-semibold ${
-            severityStyles[response.severity]
-          }`}
-        >
-        Severity: {response.severity}
-        </div>
-
-        <div className="mb-4">
-          <span className="font-semibold">AI Confidence:</span>{" "}
-          {(response.confidence * 100).toFixed(0)}%
-        </div>
-        <h3 className="font-semibold mb-2">What to do now:</h3>
-        <ul className="list-disc ml-6 mb-4">
-          {response.actions.map((a, i) => (
-            <li key={i}>{a}</li>
-           ))}
-        </ul>
-        {response.doNot.length > 0 && (
           <>
-            <h3 className="font-semibold mb-2 text-red-500">
-              Do NOT:
-            </h3>
+            {/* Emergency Summary */}
+            {/* Calm Animation (only for non-critical cases) */}
+            {response.severity !== "CRITICAL" && (
+              <CalmAnimation />
+            )}
+            <div className="mb-4 text-sm text-gray-600 text-center">
+              Emergency Type:{" "}
+              <span className="font-semibold">{type}</span> | Symptom:{" "}
+              <span className="font-semibold">{symptom}</span>
+            </div>
+
+            {/* Severity Badge */}
+            <div
+              className={`mb-4 px-4 py-2 border rounded-lg text-center font-semibold ${
+                severityStyles[response.severity] || severityStyles.UNKNOWN
+              }`}
+            >
+              Severity: {response.severity}
+            </div>
+
+            {/* AI Confidence */}
+            <div className="mb-4 text-center">
+              <span className="font-semibold">AI Confidence:</span>{" "}
+              {(response.confidence * 100).toFixed(0)}%
+            </div>
+
+            {/* Actions */}
+            <h3 className="font-semibold mb-2">What to do now:</h3>
             <ul className="list-disc ml-6 mb-4">
-              {response.doNot.map((d, i) => (
-                <li key={i}>{d}</li>
+              {response.actions.map((action, i) => (
+                <li key={i}>{action}</li>
               ))}
             </ul>
+
+            {/* Do NOT */}
+            {response.doNot && response.doNot.length > 0 && (
+              <>
+                <h3 className="font-semibold mb-2 text-red-500">
+                  Do NOT:
+                </h3>
+                <ul className="list-disc ml-6 mb-4">
+                  {response.doNot.map((item, i) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {/* Emergency Call CTA */}
+            {response.callNow && (
+              <div className="mt-6 space-y-3">
+                <a
+                  href="tel:108"
+                  className="block text-center px-6 py-4 bg-red-600 text-white text-lg font-bold rounded-lg hover:bg-red-700"
+                >
+                  📞 Call Emergency Services (108)
+                </a>
+                <a
+                  href="tel:112"
+                  className="block text-center px-6 py-3 bg-gray-800 text-white text-md rounded-lg hover:bg-black"
+                >
+                  🚨 Call Emergency Services (112)
+                </a>
+              </div>
+            )}
+
+            {/* Reasoning */}
+            <p className="text-xs text-gray-500 mt-4">
+              Reasoning: {response.reasoning}
+            </p>
           </>
+        ) : (
+          <p className="text-red-500 text-center">
+            Missing emergency information.
+          </p>
         )}
-        {(response.severity === "CRITICAL" ||
-          response.severity === "HIGH") && (
-          <div className = "mt-6 space-y-3">
-            <a
-              href="tel:108"
-              className="block text-center mt-6 px-6 py-4 bg-red-600 text-white text-lg font-bold rounded-lg hover:bg-red-700"
-            >
-            📞 Call Emergency Services (108)
-            </a>
-            <a
-              href="tel:112"
-              className="block text-center px-6 py-3 bg-gray-800 text-white text-md rounded-lg hover:bg-black"
-            >
-            🚨 Call Emergency Services (112)
-            </a>
-          </div>
-        )}
-        <p className="text-xs text-gray-500 mt-4">
-          Reasoning: {response.reasoning}
-        </p>
-      </>
-      ) : (
-        <p className="text-red-500 text-center">
-          Missing emergency information.
-        </p>
-      )}
       </div>
     </div>
   );
