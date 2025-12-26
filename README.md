@@ -85,3 +85,16 @@ Always follow instructions from trained emergency responders.
 - Multilingual emergency guidance
 - Location-aware emergency services
 - Voice-based emergency input
+
+## ⚠️ Ethics & Responsible Use
+
+This application provides **AI-assisted emergency guidance only**.
+It does **not replace professional medical advice or emergency services**.
+
+- The system prioritizes safety and escalation over certainty
+- Emergency services are always recommended for critical cases
+- No personal medical diagnosis is provided
+- User data is stored securely and minimally for system operation only
+
+This design follows responsible AI principles by ensuring transparency,
+human override, and clear limitations.
