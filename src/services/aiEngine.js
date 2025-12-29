@@ -8,7 +8,7 @@ export function getEmergencyGuidance(type, symptom) {
       "Stay calm and ensure safety.",
     ],
     doNot: [],
-    reasoning: "Insufficient information. Emergency response recommended.",
+    reasoning: "This situation cannot be clearly categorized and may involve unknown risks. The guidance prioritizes personal safety and escalation to emergency services.",
     callNow: true,
   };
 
@@ -28,7 +28,7 @@ export function getEmergencyGuidance(type, symptom) {
         "Do NOT give food or water.",
         "Do NOT shake the person.",
       ],
-      reasoning: "Unconsciousness after an accident is life-threatening.",
+      reasoning: "This situation is classified as CRITICAL because loss of consciousness after an accident indicates possible head or internal injury. The guidance prioritizes airway safety and immediate emergency response.",
       callNow: true,
     };
   }
@@ -46,7 +46,7 @@ export function getEmergencyGuidance(type, symptom) {
       doNot: [
         "Do NOT remove deeply embedded objects.",
       ],
-      reasoning: "Heavy bleeding can cause shock if untreated.",
+      reasoning: "This situation is classified as HIGH severity because uncontrolled bleeding can lead to shock. The guidance prioritizes bleeding control and rapid medical assistance.",
       callNow: true,
     };
   }
@@ -64,7 +64,7 @@ export function getEmergencyGuidance(type, symptom) {
         "Do NOT move the person unnecessarily.",
         "Do NOT massage injured areas."
       ],
-      reasoning: "Falls may cause internal injuries that are not immediately visible.",
+      reasoning: "This situation is classified as HIGH severity because falls may cause internal injuries that are not immediately visible. The guidance prioritizes minimizing movement and injury assessment.",
       callNow: true,
     };
   }
@@ -81,7 +81,7 @@ export function getEmergencyGuidance(type, symptom) {
       doNot: [
         "Do NOT try to realign the bone.",
       ],
-      reasoning: "Fractures require professional medical treatment.",
+      reasoning: "This situation is classified as HIGH severity due to the risk of bone displacement and further tissue damage. The guidance prioritizes immobilization and medical evaluation.",
       callNow: true,
     };
   }
@@ -96,7 +96,7 @@ export function getEmergencyGuidance(type, symptom) {
         "Monitor for swelling or pain."
       ],
       doNot: [],
-      reasoning: "Minor injuries usually do not require emergency care.",
+      reasoning: "This situation is classified as LOW severity because no immediate life-threatening risk is detected. The guidance focuses on basic wound care and monitoring.",
       callNow: false,
     };
   }
@@ -115,7 +115,7 @@ export function getEmergencyGuidance(type, symptom) {
       doNot: [
         "Do NOT lay the person flat.",
       ],
-      reasoning: "Breathing difficulty indicates respiratory distress.",
+      reasoning: "This situation is classified as HIGH severity because breathing difficulty indicates respiratory distress. The guidance prioritizes airway support and urgent medical attention.",
       callNow: true,
     };
   }
@@ -132,7 +132,7 @@ export function getEmergencyGuidance(type, symptom) {
       doNot: [
         "Do NOT give unknown medications.",
       ],
-      reasoning: "Severe pain may indicate internal injury.",
+      reasoning: "This situation is classified as HIGH severity because severe pain can indicate internal injury or an underlying medical condition. The guidance prioritizes rest, monitoring, and escalation if symptoms worsen.",
       callNow: true,
     };
   }
@@ -150,7 +150,7 @@ export function getEmergencyGuidance(type, symptom) {
         "Do NOT let the person walk.",
         "Do NOT give food or drink."
       ],
-      reasoning: "Chest pain may indicate a heart-related emergency.",
+      reasoning: "This situation is classified as CRITICAL because chest pain may indicate a heart-related emergency. The guidance prioritizes keeping the person still and immediate medical response.",
       callNow: true,
     };
   }
@@ -168,7 +168,7 @@ export function getEmergencyGuidance(type, symptom) {
         "Do NOT shout or panic.",
         "Do NOT crowd the person."
       ],
-      reasoning: "Panic attacks are distressing but usually not life-threatening.",
+      reasoning: "This situation is classified as LOW severity because panic attacks are usually not life-threatening. The guidance focuses on calming techniques and reassurance.",
       callNow: false,
     };
   }
@@ -186,7 +186,7 @@ export function getEmergencyGuidance(type, symptom) {
         "Do NOT restrain movements.",
         "Do NOT put anything in the mouth."
       ],
-      reasoning: "Seizures require medical evaluation, especially if prolonged.",
+      reasoning: "This situation is classified as HIGH severity because seizures can lead to injury or prolonged unconsciousness. The guidance prioritizes safety and post-seizure care.",
       callNow: true,
     };
   }
@@ -204,7 +204,7 @@ export function getEmergencyGuidance(type, symptom) {
       doNot: [
         "Do NOT use elevators.",
       ],
-      reasoning: "Fire emergencies are immediately life-threatening.",
+      reasoning: "This situation is classified as CRITICAL because fire and smoke exposure pose immediate life-threatening risks. The guidance prioritizes evacuation and emergency services.",
       callNow: true,
     };
   }
@@ -220,7 +220,7 @@ export function getEmergencyGuidance(type, symptom) {
         "Call emergency services if unsure.",
       ],
       doNot: [],
-      reasoning: "Uncategorized emergency. Human judgment required.",
+      reasoning: "This situation cannot be clearly categorized and may involve unknown risks. The guidance prioritizes personal safety and escalation to emergency services.",
       callNow: true,
     };
   }

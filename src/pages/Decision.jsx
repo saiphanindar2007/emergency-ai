@@ -168,8 +168,17 @@ export default function Decision() {
             )}
 
             {/* Reasoning */}
-            <p className="text-xs text-gray-500 mt-4">
-              Reasoning: {response.reasoning}
+            <div className="mt-6 border-t pt-4">
+              <p className="text-xs font-semibold text-gray-600 mb-1">
+                Why this decision?
+              </p>
+              <p className="text-xs text-gray-500 leading-relaxed">
+                {response.reasoning}
+              </p>
+            </div>
+
+            <p className="text-[10px] text-gray-400 mt-3 text-center">
+              This guidance supports emergency response and does not replace professional medical or emergency services.
             </p>
           </>
         ) : (

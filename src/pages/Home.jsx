@@ -14,11 +14,6 @@ export default function Home() {
         when panic makes thinking difficult.
       </p>
 
-      <p className="text-gray-700 mb-8 text-center max-w-md">
-        Get immediate, clear actions during emergencies.
-        Minimal input. AI decides. No panic.
-      </p>
-
       <button
         onClick={() => navigate("/emergency")}
         className="px-8 py-4 bg-red-600 text-white text-xl rounded-lg hover:bg-red-700"
