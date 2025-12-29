@@ -2,6 +2,8 @@ import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getEmergencyGuidance } from "../services/aiEngine";
 import CalmAnimation from "../components/CalmAnimation";
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../firebase";
 
 const severityStyles = {
   CRITICAL: "bg-red-100 text-red-700 border-red-400",
@@ -53,6 +55,9 @@ export default function Decision() {
 
     const decision = getEmergencyGuidance(type, symptom);
     setResponse(decision);
+    logEvent(analytics, "ai_decision_generated", {
+      severity: decision.severity,
+    });
     setLoading(false);
   }, [type, symptom]);
 
@@ -127,6 +132,26 @@ export default function Decision() {
               Guidance is optimized to reduce confusion during high-stress situations.
             </p>
 
+            <p className="text-xs text-center mt-1 font-medium">
+              {response.confidence >= 0.9 && "High confidence decision"}
+              {response.confidence >= 0.75 && response.confidence < 0.9 && "Moderate confidence decision"}
+              {response.confidence < 0.75 && "Low confidence — human assistance recommended"}
+            </p>
+
+            {response.confidence < 0.75 && (
+              <p className="mt-2 text-xs text-orange-600 text-center">
+                The system is operating with limited confidence. Please prioritize professional emergency services.
+              </p>
+            )}
+
+            <div className="mt-3 text-xs text-center text-green-600 font-medium">
+              ✅ Emergency event securely logged to Firebase
+            </div>
+
+            <p className="text-[10px] text-gray-400 text-center mt-1">
+              Logged at {new Date().toLocaleTimeString()}
+            </p>
+
             {/* Actions */}
             <h3 className="font-semibold mb-2">What to do now:</h3>
             <ul className="list-disc ml-6 mb-4">
@@ -150,16 +175,22 @@ export default function Decision() {
             )}
 
             {/* Emergency Call CTA */}
-            {response.callNow && (
+            {response.callNow && response.confidence >= 0.75 && (
               <div className="mt-6 space-y-3">
                 <a
                   href="tel:108"
+                  onClick={() =>
+                    logEvent(analytics, "emergency_call_triggered")
+                  }
                   className="block text-center px-6 py-4 bg-red-600 text-white text-lg font-bold rounded-lg hover:bg-red-700"
                 >
                   📞 Call Emergency Services (108)
                 </a>
                 <a
                   href="tel:112"
+                  onClick={() =>
+                    logEvent(analytics, "emergency_call_triggered")
+                  }
                   className="block text-center px-6 py-3 bg-gray-800 text-white text-md rounded-lg hover:bg-black"
                 >
                   🚨 Call Emergency Services (112)
@@ -178,7 +209,7 @@ export default function Decision() {
             </div>
 
             <p className="text-[10px] text-gray-400 mt-3 text-center">
-              This guidance supports emergency response and does not replace professional medical or emergency services.
+              This system provides decision support during emergencies and does not replace professional medical or emergency services.
             </p>
           </>
         ) : (

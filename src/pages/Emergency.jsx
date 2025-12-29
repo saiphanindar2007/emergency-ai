@@ -2,7 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { saveEmergency } from "../firebase";
 import { auth } from "../firebase";
-
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../firebase";
 
 export default function Emergency() {
   const navigate = useNavigate();
@@ -103,6 +104,9 @@ export default function Emergency() {
         uid: auth.currentUser.uid,
         type,
         symptom,
+        });
+        logEvent(analytics, "emergency_started", {
+          type,
         });
         navigate("/decision", {
           state: {

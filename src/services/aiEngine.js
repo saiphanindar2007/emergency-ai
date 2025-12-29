@@ -8,7 +8,7 @@ export function getEmergencyGuidance(type, symptom) {
       "Stay calm and ensure safety.",
     ],
     doNot: [],
-    reasoning: "This situation cannot be clearly categorized and may involve unknown risks. The guidance prioritizes personal safety and escalation to emergency services.",
+    reasoning: "Insufficient information. Emergency response recommended.",
     callNow: true,
   };
 
