@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import { saveEmergency } from "../firebase";
 import { auth } from "../firebase";
 import { logEvent } from "firebase/analytics";
@@ -11,12 +11,14 @@ export default function Emergency() {
   const [symptom, setSymptom] = useState("");
   const [listening, setListening] = useState(false);
   const [voiceError, setVoiceError] = useState("");
+  const [voiceSupported, setVoiceSupported] = useState(false);
 
   const startVoiceInput = () => {
-    if (!("webkitSpeechRecognition" in window)) {
-      setVoiceError("Voice input not supported in this browser");
-      return;
-    }
+    useEffect(() => {
+      if ("webkitSpeechRecognition" in window) {
+        setVoiceSupported(true);
+      }
+    }, []);
 
     const recognition = new window.webkitSpeechRecognition();
     recognition.lang = "en-IN";
@@ -30,21 +32,51 @@ export default function Emergency() {
       const transcript = event.results[0][0].transcript.toLowerCase();
       setListening(false);
 
-      if (transcript.includes("bleeding")) {
-        setType("Accident");
-        setSymptom("Heavy Bleeding");
-      } else if (transcript.includes("unconscious")) {
+      if (transcript.includes("unconscious")) {
         setType("Accident");
         setSymptom("Unconscious");
-      } else if (transcript.includes("chest")) {
-        setType("Medical");
-        setSymptom("Chest Pain");
+      } else if (transcript.includes("bleeding")) {
+        setType("Accident");
+        setSymptom("Heavy Bleeding");
+      } else if (transcript.includes("fall")) {
+        setType("Accident");
+        setSymptom("Fall");
+      } else if (transcript.includes("fracture")) {
+        setType("Accident");
+        setSymptom("Fracture");
+      } else if (transcript.includes("injury")) {
+        setType("Accident");
+        setSymptom("Minor Injury");
       } else if (transcript.includes("breathing")) {
         setType("Medical");
         setSymptom("Breathing Difficulty");
-      } else if (transcript.includes("fire")) {
+      } else if (transcript.includes("severe")) {
+        setType("Medical");
+        setSymptom("Severe Pain");
+      } else if (transcript.includes("chest")) {
+        setType("Medical");
+        setSymptom("Chest Pain");
+      } else if (transcript.includes("panic")) {
+        setType("Medical");
+        setSymptom("Panic Attack");
+      } else if (transcript.includes("seizure")) {
+        setType("Medical");
+        setSymptom("Seizure");
+      } else if (transcript.includes("burns")) {
         setType("Fire");
         setSymptom("Burns");
+      } else if (transcript.includes("smoke")) {
+        setType("Fire");
+        setSymptom("Smoke Inhalation");
+      } else if (transcript.includes("collapsed")) {
+        setType("Other");
+        setSymptom("Person Collapsed");
+      } else if (transcript.includes("distress")) {
+        setType("Other");
+        setSymptom("Severe Distress");
+      } else if (transcript.includes("unknown")) {
+        setType("Other");
+        setSymptom("Unknown Emergency");
       } else {
         setVoiceError("Could not understand. Please select manually.");
       }
@@ -139,20 +171,22 @@ export default function Emergency() {
         </select>
       </div>
 
-      <div className="mt-4 text-center">
-        <button
-          onClick={startVoiceInput}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          {listening ? "🎤 Listening..." : "🎤 Use Voice Input"}
-        </button>
-        {voiceError && (
-          <p className="text-xs text-red-500 mt-2">{voiceError}</p>
-        )}
-        <p className="text-[10px] text-gray-500 mt-1">
-          Optional voice input for faster emergency reporting
-        </p>
-      </div>
+      {voiceSupported && (
+        <div className="mt-4 text-center">
+          <button
+            onClick={startVoiceInput}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            {listening ? "🎤 Listening..." : "🎤 Use Voice Input"}
+          </button>
+          {voiceError && (
+            <p className="text-xs text-red-500 mt-2">{voiceError}</p>
+          )}
+          <p className="text-[10px] text-gray-500 mt-1">
+            Optional voice input for faster emergency reporting
+          </p>
+        </div>
+      )}
 
     {/* Continue Button */}
     <button
