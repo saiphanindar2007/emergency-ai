@@ -13,12 +13,13 @@ export default function Emergency() {
   const [voiceError, setVoiceError] = useState("");
   const [voiceSupported, setVoiceSupported] = useState(false);
 
+  useEffect(() => {
+    if ("webkitSpeechRecognition" in window) {
+      setVoiceSupported(true);
+    }
+  }, []);
+
   const startVoiceInput = () => {
-    useEffect(() => {
-      if ("webkitSpeechRecognition" in window) {
-        setVoiceSupported(true);
-      }
-    }, []);
 
     const recognition = new window.webkitSpeechRecognition();
     recognition.lang = "en-IN";
