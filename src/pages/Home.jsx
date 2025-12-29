@@ -9,6 +9,11 @@ export default function Home() {
         AI Emergency Assistant
       </h1>
 
+      <p className="text-gray-600 text-center max-w-md mt-4">
+        Get clear, AI-driven emergency decisions in the first critical moments —
+        when panic makes thinking difficult.
+      </p>
+
       <p className="text-gray-700 mb-8 text-center max-w-md">
         Get immediate, clear actions during emergencies.
         Minimal input. AI decides. No panic.
@@ -20,6 +25,10 @@ export default function Home() {
       >
         PANIC
       </button>
+
+      <p className="text-xs text-gray-400 text-center mt-6">
+        Designed for speed, clarity, and responsible AI decision-making.
+      </p>
     </div>
   );
 }

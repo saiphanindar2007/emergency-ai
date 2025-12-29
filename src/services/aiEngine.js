@@ -133,7 +133,7 @@ export function getEmergencyGuidance(type, symptom) {
         "Do NOT give unknown medications.",
       ],
       reasoning: "Severe pain may indicate internal injury.",
-      callNow: false,
+      callNow: true,
     };
   }
 

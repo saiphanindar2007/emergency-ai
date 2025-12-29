@@ -123,6 +123,10 @@ export default function Decision() {
               {(response.confidence * 100).toFixed(0)}%
             </div>
 
+            <p className="text-xs text-gray-500 text-center mt-2">
+              Guidance is optimized to reduce confusion during high-stress situations.
+            </p>
+
             {/* Actions */}
             <h3 className="font-semibold mb-2">What to do now:</h3>
             <ul className="list-disc ml-6 mb-4">
