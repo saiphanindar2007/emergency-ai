@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInAnonymously } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore} from "firebase/firestore";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 
