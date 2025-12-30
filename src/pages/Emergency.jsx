@@ -12,6 +12,7 @@ export default function Emergency() {
   const [listening, setListening] = useState(false);
   const [voiceError, setVoiceError] = useState("");
   const [voiceSupported, setVoiceSupported] = useState(false);
+  const [fromVoice, setFromVoice] = useState(false);
 
   useEffect(() => {
     if ("webkitSpeechRecognition" in window) {
@@ -19,8 +20,19 @@ export default function Emergency() {
     }
   }, []);
 
-  const startVoiceInput = () => {
+  useEffect(() => {
+    // Auto-navigate ONLY when input comes from voice
+    if (fromVoice && type && symptom && listening === false) {
+      navigate("/decision", {
+        state: { type, symptom },
+      });
+      // reset so manual selection never auto-navigates
+      setFromVoice(false);
+    }
+  }, [fromVoice, type, symptom, listening, navigate]);
 
+  const startVoiceInput = () => {
+    setFromVoice(true);
     const recognition = new window.webkitSpeechRecognition();
     recognition.lang = "en-IN";
     recognition.interimResults = false;
