@@ -1,12 +1,14 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { saveEmergency } from "../firebase";
-import { auth } from "../firebase";
+import { auth, analytics } from "../firebase";
 import { logEvent } from "firebase/analytics";
-import { analytics } from "../firebase";
+import { translations } from "../i18n/translations";
 
-export default function Emergency() {
+export default function Emergency({ language }) {
   const navigate = useNavigate();
+  const t = (key) => translations[language][key];
+
   const [type, setType] = useState("");
   const [symptom, setSymptom] = useState("");
   const [listening, setListening] = useState(false);
@@ -20,19 +22,17 @@ export default function Emergency() {
     }
   }, []);
 
+  // Auto navigate ONLY for voice input
   useEffect(() => {
-    // Auto-navigate ONLY when input comes from voice
-    if (fromVoice && type && symptom && listening === false) {
-      navigate("/decision", {
-        state: { type, symptom },
-      });
-      // reset so manual selection never auto-navigates
+    if (fromVoice && type && symptom && !listening) {
+      navigate("/decision", { state: { type, symptom } });
       setFromVoice(false);
     }
   }, [fromVoice, type, symptom, listening, navigate]);
 
   const startVoiceInput = () => {
     setFromVoice(true);
+
     const recognition = new window.webkitSpeechRecognition();
     recognition.lang = "en-IN";
     recognition.interimResults = false;
@@ -45,77 +45,80 @@ export default function Emergency() {
       const transcript = event.results[0][0].transcript.toLowerCase();
       setListening(false);
 
-      if (transcript.includes("unconscious")) {
-        setType("Accident");
-        setSymptom("Unconscious");
-      } else if (transcript.includes("bleeding")) {
-        setType("Accident");
-        setSymptom("Heavy Bleeding");
-      } else if (transcript.includes("fall")) {
-        setType("Accident");
-        setSymptom("Fall");
-      } else if (transcript.includes("fracture")) {
-        setType("Accident");
-        setSymptom("Fracture");
-      } else if (transcript.includes("injury")) {
-        setType("Accident");
-        setSymptom("Minor Injury");
-      } else if (transcript.includes("breathing")) {
-        setType("Medical");
-        setSymptom("Breathing Difficulty");
-      } else if (transcript.includes("severe")) {
-        setType("Medical");
-        setSymptom("Severe Pain");
-      } else if (transcript.includes("chest")) {
-        setType("Medical");
-        setSymptom("Chest Pain");
-      } else if (transcript.includes("panic")) {
-        setType("Medical");
-        setSymptom("Panic Attack");
-      } else if (transcript.includes("seizure")) {
-        setType("Medical");
-        setSymptom("Seizure");
-      } else if (transcript.includes("burns")) {
-        setType("Fire");
-        setSymptom("Burns");
-      } else if (transcript.includes("smoke")) {
-        setType("Fire");
-        setSymptom("Smoke Inhalation");
-      } else if (transcript.includes("collapsed")) {
-        setType("Other");
-        setSymptom("Person Collapsed");
-      } else if (transcript.includes("distress")) {
-        setType("Other");
-        setSymptom("Severe Distress");
-      } else if (transcript.includes("unknown")) {
-        setType("Other");
-        setSymptom("Unknown Emergency");
+      const map = [
+        ["unconscious", "Accident", "Unconscious"],
+        ["bleeding", "Accident", "Heavy Bleeding"],
+        ["fall", "Accident", "Fall"],
+        ["fracture", "Accident", "Fracture"],
+        ["injury", "Accident", "Minor Injury"],
+        ["breathing", "Medical", "Breathing Difficulty"],
+        ["severe", "Medical", "Severe Pain"],
+        ["chest", "Medical", "Chest Pain"],
+        ["panic", "Medical", "Panic Attack"],
+        ["seizure", "Medical", "Seizure"],
+        ["burns", "Fire", "Burns"],
+        ["smoke", "Fire", "Smoke Inhalation"],
+        ["collapsed", "Other", "Person Collapsed"],
+        ["distress", "Other", "Severe Distress"],
+        ["unknown", "Other", "Unknown Emergency"],
+      ];
+
+      const match = map.find(([k]) => transcript.includes(k));
+      if (match) {
+        setType(match[1]);
+        setSymptom(match[2]);
       } else {
         setVoiceError("Could not understand. Please select manually.");
       }
     };
+
     recognition.onerror = () => {
       setListening(false);
       setVoiceError("Voice recognition failed. Try again.");
     };
+
     recognition.start();
+  };
+
+  const symptomOptions = {
+    Accident: [
+      "Unconscious",
+      "Heavy Bleeding",
+      "Fall",
+      "Fracture",
+      "Minor Injury",
+    ],
+    Medical: [
+      "Breathing Difficulty",
+      "Severe Pain",
+      "Chest Pain",
+      "Panic Attack",
+      "Seizure",
+    ],
+    Fire: [
+      "Burns",
+      "Smoke Inhalation",
+    ],
+    Other: [
+      "Person Collapsed",
+      "Severe Distress",
+      "Unknown Emergency",
+    ],
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center px-4">
       <h1 className="text-3xl font-bold text-red-600 mb-6">
-        Emergency Details
+        {t("emergency_details")}
       </h1>
 
       <p className="text-gray-700 mb-8 text-center max-w-md">
-        Select what best describes the situation.
-        The AI will decide what to do next.
+        {t("emergency_hint")}
       </p>
 
-      {/* Emergency Type */}
       <div className="w-full max-w-sm mb-4">
         <label className="block mb-2 font-medium">
-          Emergency Type
+          {t("emergency_type")}
         </label>
         <select
           value={type}
@@ -125,108 +128,67 @@ export default function Emergency() {
           }}
           className="w-full p-3 border rounded-lg"
         >
-          <option value="">Select type</option>
-          <option value="Accident">Accident</option>
-          <option value="Medical">Medical</option>
-          <option value="Fire">Fire</option>
-          <option value="Other">Other</option>
+          <option value="">{t("select_type")}</option>
+          {["Accident", "Medical", "Fire", "Other"].map((v) => (
+            <option key={v} value={v}>
+              {t(v)}
+            </option>
+          ))}
         </select>
       </div>
 
-      {/* Symptoms */}
       <div className="w-full max-w-sm mb-6">
         <label className="block mb-2 font-medium">
-          Symptoms (select one)
+          {t("symptoms")}
         </label>
 
         <select
           value={symptom}
           onChange={(e) => setSymptom(e.target.value)}
           className="w-full p-3 border rounded-lg"
+          disabled={!type}
         >
-        <option value="">Select symptom</option>
+          <option value="">{t("select_symptom")}</option>
 
-        {type === "Accident" && (
-          <>
-            <option value="Unconscious">Unconscious</option>
-            <option value="Heavy Bleeding">Heavy Bleeding</option>
-            <option value="Fall">Fall</option>
-            <option value="Fracture">Fracture</option>
-            <option value="Minor Injury">Minor Injury</option>
-          </>
-        )}
-
-        {type === "Medical" && (
-          <>
-            <option value="Breathing Difficulty">Breathing Difficulty</option>
-            <option value="Severe Pain">Severe Pain</option>
-            <option value="Chest Pain">Chest Pain</option>
-            <option value="Panic Attack">Panic Attack</option>
-            <option value="Seizure">Seizure</option>
-          </>
-        )}
-
-        {type === "Fire" && (
-          <>
-            <option value="Burns">Burns</option>
-            <option value="Smoke Inhalation">Smoke Inhalation</option>
-          </>
-        )}
-
-        {type === "Other" && (
-          <>
-            <option value="Person Collapsed">Person Collapsed</option>
-            <option value="Severe Distress">Severe Distress</option>
-            <option value="Unknown Emergency">Unknown Emergency</option>
-          </>
-        )}
-
+          {type &&
+            symptomOptions[type].map((sym) => (
+            <option key={sym} value={sym}>
+              {t(sym)}
+            </option>
+          ))}
         </select>
       </div>
 
       {voiceSupported && (
-        <div className="mt-4 text-center">
+        <div className="text-center mb-6">
           <button
             onClick={startVoiceInput}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg"
           >
-            {listening ? "🎤 Listening..." : "🎤 Use Voice Input"}
+            {listening ? `🎤 ${t("listening")}` : `🎤 ${t("voice_input")}`}
           </button>
+          <p className="text-xs text-gray-500 mt-2">{t("voice_help")}</p>
           {voiceError && (
-            <p className="text-xs text-red-500 mt-2">{voiceError}</p>
+            <p className="text-xs text-red-500 mt-1">{voiceError}</p>
           )}
-          <p className="text-[10px] text-gray-500 mt-1">
-            Optional voice input for faster emergency reporting
-          </p>
         </div>
       )}
 
-    {/* Continue Button */}
-    <button
-      onClick={async () => {
-        if (!type || !symptom) {
-          alert("Please select emergency details");
-          return;
-        }
-        await saveEmergency({
-        uid: auth.currentUser.uid,
-        type,
-        symptom,
-        });
-        logEvent(analytics, "emergency_started", {
-          type,
-        });
-        navigate("/decision", {
-          state: {
+      <button
+        onClick={async () => {
+          if (!type || !symptom) return alert("Please select details");
+          await saveEmergency({
+            uid: auth.currentUser.uid,
             type,
             symptom,
-          },
-        });
-      }}
-      className="px-8 py-4 bg-red-600 text-white text-lg rounded-lg hover:bg-red-700"
-    >
-      GET AI DECISION
-    </button>
+          });
+          logEvent(analytics, "emergency_started", { type });
+          navigate("/decision", { state: { type, symptom } });
+        }}
+        className="px-8 py-4 bg-red-600 text-white text-lg rounded-lg"
+      >
+        {t("get_decision")}
+      </button>
     </div>
   );
 }

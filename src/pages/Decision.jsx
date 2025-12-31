@@ -4,6 +4,7 @@ import { getEmergencyGuidance } from "../services/aiEngine";
 import CalmAnimation from "../components/CalmAnimation";
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebase";
+import { translations } from "../i18n/translations";
 
 const severityStyles = {
   CRITICAL: "bg-red-100 text-red-700 border-red-400",
@@ -39,7 +40,8 @@ const severityUI = {
   },
 };
 
-export default function Decision() {
+export default function Decision({ language }) {
+  const t = (key) => translations[language][key];
   const location = useLocation();
   const { type, symptom } = location.state || {};
 
@@ -87,12 +89,12 @@ export default function Decision() {
                 : ""
             }`}
         >
-          AI Emergency Guidance
+          {t("decision_title")}
         </h1>
 
         {loading ? (
           <p className="text-center text-gray-600">
-            Analyzing situation and deciding next steps...
+            {t("analyzing")}
           </p>
         ) : response ? (
           <>
@@ -102,9 +104,10 @@ export default function Decision() {
               <CalmAnimation />
             )}
             <div className="mb-4 text-sm text-gray-600 text-center">
-              Emergency Type:{" "}
-              <span className="font-semibold">{type}</span> | Symptom:{" "}
-              <span className="font-semibold">{symptom}</span>
+                {t("emergency_type_label")}{": "}
+              <span className="font-semibold">{t(type)}</span>{" "} 
+                | {t("symptom_label")}{": "}
+              <span className="font-semibold">{t(symptom)}</span>
             </div>
 
             {/* Severity Badge */}
@@ -113,18 +116,18 @@ export default function Decision() {
                 severityStyles[response.severity] || severityStyles.UNKNOWN
               }`}
             >
-              Severity: {response.severity}
+              {t("severity")}: {response.severity}
             </div>
 
             <p className="text-center text-sm font-semibold uppercase tracking-wide mt-2">
-              {response.severity === "CRITICAL" && "Immediate action required"}
-              {response.severity === "HIGH" && "Urgent attention needed"}
-              {response.severity === "LOW" && "Guided assistance"}
+              {response.severity === "CRITICAL" && t("immediate_action")}
+              {response.severity === "HIGH" && t("urgent_attention")}
+              {response.severity === "LOW" && t("guided_assistance")}
             </p>
 
             {/* AI Confidence */}
             <div className="mb-4 text-center">
-              <span className="font-semibold">AI Confidence:</span>{" "}
+              <span className="font-semibold">{t("ai_confidence")}:</span>{" "}
               {(response.confidence * 100).toFixed(0)}%
             </div>
 
@@ -133,9 +136,9 @@ export default function Decision() {
             </p>
 
             <p className="text-xs text-center mt-1 font-medium">
-              {response.confidence >= 0.9 && "High confidence decision"}
-              {response.confidence >= 0.75 && response.confidence < 0.9 && "Moderate confidence decision"}
-              {response.confidence < 0.75 && "Low confidence — human assistance recommended"}
+              {response.confidence >= 0.9 && t("high_confidence")}
+              {response.confidence >= 0.75 && response.confidence < 0.9 && t("moderate_confidence")}
+              {response.confidence < 0.75 && t("low_confidence")}
             </p>
 
             {response.confidence < 0.75 && (
@@ -145,7 +148,7 @@ export default function Decision() {
             )}
 
             <div className="mt-3 text-xs text-center text-green-600 font-medium">
-              ✅ Emergency event securely logged to Firebase
+              ✅ {t("logged")}
             </div>
 
             <p className="text-[10px] text-gray-400 text-center mt-1">
@@ -153,7 +156,7 @@ export default function Decision() {
             </p>
 
             {/* Actions */}
-            <h3 className="font-semibold mb-2">What to do now:</h3>
+            <h3 className="font-semibold mb-2">{t("what_to_do")}:</h3>
             <ul className="list-disc ml-6 mb-4">
               {response.actions.map((action, i) => (
                 <li key={i}>{action}</li>
@@ -164,7 +167,7 @@ export default function Decision() {
             {response.doNot && response.doNot.length > 0 && (
               <>
                 <h3 className="font-semibold mb-2 text-red-500">
-                  Do NOT:
+                  {t("do_not")}:
                 </h3>
                 <ul className="list-disc ml-6 mb-4">
                   {response.doNot.map((item, i) => (
@@ -184,7 +187,7 @@ export default function Decision() {
                   }
                   className="block text-center px-6 py-4 bg-red-600 text-white text-lg font-bold rounded-lg hover:bg-red-700"
                 >
-                  📞 Call Emergency Services (108)
+                  📞 {t("call_108")}
                 </a>
                 <a
                   href="tel:112"
@@ -193,7 +196,7 @@ export default function Decision() {
                   }
                   className="block text-center px-6 py-3 bg-gray-800 text-white text-md rounded-lg hover:bg-black"
                 >
-                  🚨 Call Emergency Services (112)
+                  🚨 {t("call_112")}
                 </a>
               </div>
             )}
@@ -201,7 +204,7 @@ export default function Decision() {
             {/* Reasoning */}
             <div className="mt-6 border-t pt-4">
               <p className="text-xs font-semibold text-gray-600 mb-1">
-                Why this decision?
+                {t("why_decision")}
               </p>
               <p className="text-xs text-gray-500 leading-relaxed">
                 {response.reasoning}
@@ -209,7 +212,7 @@ export default function Decision() {
             </div>
 
             <p className="text-[10px] text-gray-400 mt-3 text-center">
-              This system provides decision support during emergencies and does not replace professional medical or emergency services.
+              {t("disclaimer_decision")}
             </p>
           </>
         ) : (
