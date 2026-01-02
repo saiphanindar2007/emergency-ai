@@ -41,6 +41,9 @@ export const translations = {
     Seizure: "Seizure",
     Burns: "Burns",
     "Smoke Inhalation": "Smoke Inhalation",
+    "Person Collapsed": "Person Collapsed",
+    "Severe Distress": "Severe Distress",
+    "Unknown Emergency": "Unknown Emergency",
 
     /* ---------- DECISION PAGE ---------- */
     decision_title: "AI Emergency Guidance",
@@ -237,6 +240,9 @@ export const translations = {
     Seizure: "दौरा",
     Burns: "जलन",
     "Smoke Inhalation": "धुएँ का असर",
+    "Person Collapsed": "बेहोश व्यक्ति",
+    "Severe Distress": "गंभीर संकट",
+    "Unknown Emergency": "अज्ञात आपातकाल",
 
     decision_title: "एआई आपातकालीन मार्गदर्शन",
     analyzing: "स्थिति का विश्लेषण किया जा रहा है...",
@@ -469,6 +475,9 @@ export const translations = {
     Seizure: "ఫిట్స్",
     Burns: "కాలిన గాయాలు",
     "Smoke Inhalation": "పొగ పీల్చడం",
+    "Person Collapsed": "బెహోష్ వ్యక్తి",
+    "Severe Distress": "తీవ్ర ఆపద",
+    "Unknown Emergency": "తెలియని అత్యవసరం",
 
     decision_title: "ఏఐ అత్యవసర మార్గదర్శకం",
     analyzing: "పరిస్థితిని విశ్లేషిస్తున్నాము...",

@@ -150,12 +150,13 @@ export default function Emergency({ language }) {
         >
           <option value="">{t("select_symptom")}</option>
 
-          {type &&
+          {type && symptomOptions[type] && (
             symptomOptions[type].map((sym) => (
-            <option key={sym} value={sym}>
-              {t(sym)}
-            </option>
-          ))}
+              <option key={sym} value={sym}>
+                {t(sym)}
+              </option>
+            ))
+          )}
         </select>
       </div>
 
