@@ -1,34 +1,30 @@
 export function getEmergencyGuidance(type, symptom) {
-  // DEFAULT RESPONSE
   const base = {
     severity: "UNKNOWN",
     confidence: 0.6,
-    actions: [
-      "Call emergency services immediately.",
-      "Stay calm and ensure safety.",
-    ],
+    actions: ["general_call_emergency", "general_stay_safe"],
     doNot: [],
-    reasoning: "Insufficient information. Emergency response recommended.",
+    reasoning: "general_unknown_reason",
     callNow: true,
   };
 
-  // ACCIDENT CASES
+  // ================= ACCIDENT =================
+
   if (type === "Accident" && symptom === "Unconscious") {
     return {
       severity: "CRITICAL",
       confidence: 0.95,
       actions: [
-        "Call emergency services (108) immediately.",
-        "Check if the person is breathing.",
-        "Place the person on their side.",
-        "Loosen tight clothing.",
-        "Stay with the person until help arrives.",
+        "accident_unconscious_check_breathing",
+        "accident_unconscious_recovery_position",
+        "accident_unconscious_loosen_clothes",
+        "call_108",
       ],
       doNot: [
-        "Do NOT give food or water.",
-        "Do NOT shake the person.",
+        "accident_unconscious_no_food",
+        "accident_unconscious_no_shake",
       ],
-      reasoning: "This situation is classified as CRITICAL because loss of consciousness after an accident indicates possible head or internal injury. The guidance prioritizes airway safety and immediate emergency response.",
+      reasoning: "accident_unconscious_reason",
       callNow: true,
     };
   }
@@ -38,15 +34,13 @@ export function getEmergencyGuidance(type, symptom) {
       severity: "HIGH",
       confidence: 0.9,
       actions: [
-        "Apply firm pressure to stop bleeding.",
-        "Use a clean cloth or bandage.",
-        "Keep the injured area elevated.",
-        "Call emergency services if bleeding continues.",
+        "bleeding_apply_pressure",
+        "bleeding_use_clean_cloth",
+        "bleeding_elevate_area",
+        "call_108",
       ],
-      doNot: [
-        "Do NOT remove deeply embedded objects.",
-      ],
-      reasoning: "This situation is classified as HIGH severity because uncontrolled bleeding can lead to shock. The guidance prioritizes bleeding control and rapid medical assistance.",
+      doNot: ["bleeding_no_remove_objects"],
+      reasoning: "bleeding_high_reason",
       callNow: true,
     };
   }
@@ -56,15 +50,14 @@ export function getEmergencyGuidance(type, symptom) {
       severity: "HIGH",
       confidence: 0.9,
       actions: [
-        "Keep the person still.",
-        "Check for visible injuries.",
-        "Apply gentle pressure if bleeding."
+        "fall_keep_still",
+        "fall_check_injuries",
       ],
       doNot: [
-        "Do NOT move the person unnecessarily.",
-        "Do NOT massage injured areas."
+        "fall_no_move_unnecessarily",
+        "fall_no_massage",
       ],
-      reasoning: "This situation is classified as HIGH severity because falls may cause internal injuries that are not immediately visible. The guidance prioritizes minimizing movement and injury assessment.",
+      reasoning: "fall_high_reason",
       callNow: true,
     };
   }
@@ -74,14 +67,12 @@ export function getEmergencyGuidance(type, symptom) {
       severity: "HIGH",
       confidence: 0.88,
       actions: [
-        "Immobilize the injured area.",
-        "Apply cold pack if swelling is present.",
-        "Seek medical help immediately."
+        "fracture_immobilize",
+        "fracture_apply_cold",
+        "call_108",
       ],
-      doNot: [
-        "Do NOT try to realign the bone.",
-      ],
-      reasoning: "This situation is classified as HIGH severity due to the risk of bone displacement and further tissue damage. The guidance prioritizes immobilization and medical evaluation.",
+      doNot: ["fracture_no_realign"],
+      reasoning: "fracture_high_reason",
       callNow: true,
     };
   }
@@ -91,31 +82,30 @@ export function getEmergencyGuidance(type, symptom) {
       severity: "LOW",
       confidence: 0.8,
       actions: [
-        "Clean the wound with clean water.",
-        "Apply a clean bandage.",
-        "Monitor for swelling or pain."
+        "minor_clean_wound",
+        "minor_apply_bandage",
+        "minor_monitor",
       ],
       doNot: [],
-      reasoning: "This situation is classified as LOW severity because no immediate life-threatening risk is detected. The guidance focuses on basic wound care and monitoring.",
+      reasoning: "minor_low_reason",
       callNow: false,
     };
   }
 
-  // MEDICAL CASES
+  // ================= MEDICAL =================
+
   if (type === "Medical" && symptom === "Breathing Difficulty") {
     return {
       severity: "HIGH",
       confidence: 0.95,
       actions: [
-        "Help the person sit upright.",
-        "Loosen tight clothing.",
-        "Encourage slow breathing.",
-        "Call emergency services immediately.",
+        "breathing_sit_upright",
+        "breathing_loosen_clothes",
+        "breathing_slow_breath",
+        "call_108",
       ],
-      doNot: [
-        "Do NOT lay the person flat.",
-      ],
-      reasoning: "This situation is classified as HIGH severity because breathing difficulty indicates respiratory distress. The guidance prioritizes airway support and urgent medical attention.",
+      doNot: ["breathing_no_flat"],
+      reasoning: "breathing_high_reason",
       callNow: true,
     };
   }
@@ -125,14 +115,12 @@ export function getEmergencyGuidance(type, symptom) {
       severity: "HIGH",
       confidence: 0.85,
       actions: [
-        "Help the person rest comfortably.",
-        "Monitor symptoms closely.",
-        "Call emergency services if pain worsens.",
+        "pain_rest",
+        "pain_monitor",
+        "call_if_worse",
       ],
-      doNot: [
-        "Do NOT give unknown medications.",
-      ],
-      reasoning: "This situation is classified as HIGH severity because severe pain can indicate internal injury or an underlying medical condition. The guidance prioritizes rest, monitoring, and escalation if symptoms worsen.",
+      doNot: ["pain_no_unknown_meds"],
+      reasoning: "pain_high_reason",
       callNow: true,
     };
   }
@@ -142,15 +130,16 @@ export function getEmergencyGuidance(type, symptom) {
       severity: "CRITICAL",
       confidence: 0.97,
       actions: [
-        "Help the person sit or lie down comfortably.",
-        "Loosen tight clothing.",
-        "Keep the person calm and still."
+        "chest_help_sit",
+        "chest_loosen_clothes",
+        "chest_keep_calm",
+        "call_108",
       ],
       doNot: [
-        "Do NOT let the person walk.",
-        "Do NOT give food or drink."
+        "chest_no_walk",
+        "chest_no_food",
       ],
-      reasoning: "This situation is classified as CRITICAL because chest pain may indicate a heart-related emergency. The guidance prioritizes keeping the person still and immediate medical response.",
+      reasoning: "chest_critical_reason",
       callNow: true,
     };
   }
@@ -160,15 +149,15 @@ export function getEmergencyGuidance(type, symptom) {
       severity: "LOW",
       confidence: 0.9,
       actions: [
-        "Encourage slow, deep breathing.",
-        "Move to a quiet and safe place.",
-        "Stay with the person and reassure them."
+        "panic_slow_breathing",
+        "panic_quiet_place",
+        "panic_reassure",
       ],
       doNot: [
-        "Do NOT shout or panic.",
-        "Do NOT crowd the person."
+        "panic_no_shout",
+        "panic_no_crowd",
       ],
-      reasoning: "This situation is classified as LOW severity because panic attacks are usually not life-threatening. The guidance focuses on calming techniques and reassurance.",
+      reasoning: "panic_low_reason",
       callNow: false,
     };
   }
@@ -178,49 +167,49 @@ export function getEmergencyGuidance(type, symptom) {
       severity: "HIGH",
       confidence: 0.93,
       actions: [
-        "Clear nearby objects to prevent injury.",
-        "Place the person on their side after the seizure stops.",
-        "Time the seizure if possible."
+        "seizure_clear_area",
+        "seizure_recovery_position",
+        "seizure_time",
       ],
       doNot: [
-        "Do NOT restrain movements.",
-        "Do NOT put anything in the mouth."
+        "seizure_no_restrain",
+        "seizure_no_mouth",
       ],
-      reasoning: "This situation is classified as HIGH severity because seizures can lead to injury or prolonged unconsciousness. The guidance prioritizes safety and post-seizure care.",
+      reasoning: "seizure_high_reason",
       callNow: true,
     };
   }
 
-  // FIRE
-  if (type === "Fire" && (symptom === "Burns" || symptom === "Smoke Inhalation")){
+  // ================= FIRE =================
+
+  if (type === "Fire" && (symptom === "Burns" || symptom === "Smoke Inhalation")) {
     return {
       severity: "CRITICAL",
       confidence: 0.98,
       actions: [
-        "Move away from fire immediately.",
-        "Avoid inhaling smoke.",
-        "Call emergency services (108).",
+        "fire_move_away",
+        "fire_avoid_smoke",
+        "call_108",
       ],
-      doNot: [
-        "Do NOT use elevators.",
-      ],
-      reasoning: "This situation is classified as CRITICAL because fire and smoke exposure pose immediate life-threatening risks. The guidance prioritizes evacuation and emergency services.",
+      doNot: ["fire_no_elevator"],
+      reasoning: "fire_critical_reason",
       callNow: true,
     };
   }
 
-  // OTHER
+  // ================= OTHER =================
+
   if (type === "Other") {
     return {
       severity: "UNKNOWN",
       confidence: 0.7,
       actions: [
-        "Assess the situation carefully.",
-        "Ensure your own safety.",
-        "Call emergency services if unsure.",
+        "other_assess",
+        "other_ensure_safety",
+        "call_108",
       ],
       doNot: [],
-      reasoning: "This situation cannot be clearly categorized and may involve unknown risks. The guidance prioritizes personal safety and escalation to emergency services.",
+      reasoning: "other_unknown_reason",
       callNow: true,
     };
   }
