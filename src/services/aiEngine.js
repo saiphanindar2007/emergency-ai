@@ -18,7 +18,6 @@ export function getEmergencyGuidance(type, symptom) {
         "accident_unconscious_check_breathing",
         "accident_unconscious_recovery_position",
         "accident_unconscious_loosen_clothes",
-        "call_108",
       ],
       doNot: [
         "accident_unconscious_no_food",
@@ -37,7 +36,6 @@ export function getEmergencyGuidance(type, symptom) {
         "bleeding_apply_pressure",
         "bleeding_use_clean_cloth",
         "bleeding_elevate_area",
-        "call_108",
       ],
       doNot: ["bleeding_no_remove_objects"],
       reasoning: "bleeding_high_reason",
@@ -69,7 +67,6 @@ export function getEmergencyGuidance(type, symptom) {
       actions: [
         "fracture_immobilize",
         "fracture_apply_cold",
-        "call_108",
       ],
       doNot: ["fracture_no_realign"],
       reasoning: "fracture_high_reason",
@@ -102,7 +99,6 @@ export function getEmergencyGuidance(type, symptom) {
         "breathing_sit_upright",
         "breathing_loosen_clothes",
         "breathing_slow_breath",
-        "call_108",
       ],
       doNot: ["breathing_no_flat"],
       reasoning: "breathing_high_reason",
@@ -133,7 +129,6 @@ export function getEmergencyGuidance(type, symptom) {
         "chest_help_sit",
         "chest_loosen_clothes",
         "chest_keep_calm",
-        "call_108",
       ],
       doNot: [
         "chest_no_walk",
@@ -189,7 +184,6 @@ export function getEmergencyGuidance(type, symptom) {
       actions: [
         "fire_move_away",
         "fire_avoid_smoke",
-        "call_108",
       ],
       doNot: ["fire_no_elevator"],
       reasoning: "fire_critical_reason",
@@ -206,7 +200,6 @@ export function getEmergencyGuidance(type, symptom) {
       actions: [
         "other_assess",
         "other_ensure_safety",
-        "call_108",
       ],
       doNot: [],
       reasoning: "other_unknown_reason",
